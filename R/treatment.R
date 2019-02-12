@@ -5,7 +5,7 @@
 # '   html_document:
 CountTreatment <- function(input_variable, input_variable_head, input_variable_foot, column_name, param){
   course_list <- NULL
-  for (i in course_count) {
+  for (i in kCourse_count) {
     if (!is.na(input_variable)) {
       temp_input_variable <- input_variable
     } else {
@@ -15,13 +15,11 @@ CountTreatment <- function(input_variable, input_variable_head, input_variable_f
     assign(temp_output_variable, length(na.omit(ptdata[ ,temp_input_variable])))
     course_list <- append(course_list, get(temp_output_variable))
   }
-  df <- data.frame(course_count, course_list)
+  df <- data.frame(kCourse_count, course_list)
   colnames(df) <- c(column_name, "count")
   df$per <- df$count / param * 100
   return(df)
 }
-kMaxcourse <- 6
-course_count <- c(1:6)
 #' ## R−mini CHP治療コース数
 df_treatment_course <- CountTreatment(NA, "fs", "_ECRFTDTC", "course", all_qualification)
 kable(df_treatment_course, format = "markdown")

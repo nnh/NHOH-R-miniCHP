@@ -7,7 +7,8 @@ kIpi_scores <- c("low risk", "low intermediate risk", "high intermediate risk", 
 
 #' ## Number of patients (%)
 Number_of_patients <- paste0("n=", all_qualification, " (", all_qualification / all_qualification * 100, "%)")
-kable(Number_of_patients, format = "markdown")
+#' ### `r Number_of_patients`
+# kable(Number_of_patients, format = "markdown")
 #' ## Median age [IQR] (range), years *1
 df_age_sex <- merge(ptdata, birth_date_sex[ ,c("症例登録番号", "生年月日", "field4")],
                     all=F, by.x="SUBJID", by.y="症例登録番号")
@@ -122,13 +123,15 @@ kable(LDH, format = "markdown")
 # β2MG(mg/L)
 # 欠測-1を除去
 temp_in_lborres_b2mg <- subset(ptdata, in_lborres_b2mg != kNA_lb)$in_lborres_b2mg
-#' ## β2MG(mg/L)    (n=`r length(temp_in_lborres_b2mg)`)
+#' ## β2MG(mg/L)
+#' ### n=`r length(temp_in_lborres_b2mg)`
 Beta2MG <- SummaryValue(temp_in_lborres_b2mg)
 kable(Beta2MG, format = "markdown")
 # 血清sIL-2R
 # 欠測-1を除去
 temp_in_lborres_sil2r <-  subset(ptdata, in_lborres_sil2r != kNA_lb)$in_lborres_sil2r
-#' ## 血清sIL-2R    (n=`r length(temp_in_lborres_sil2r)`)
+#' ## 血清sIL-2R
+#' ### n=`r length(temp_in_lborres_sil2r)`
 sIL_2R <- SummaryValue(temp_in_lborres_sil2r)
 kable(sIL_2R, format = "markdown")
 

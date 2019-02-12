@@ -29,6 +29,8 @@ ConvNum <- function(target){
 kOption_csv_name <- "option.csv"
 kOption_csv_fileEncoding <- "cp932"
 kNA_lb <- -1
+kMaxcourse <- 6
+kCourse_count <- c(1:6)
 # ------
 Sys.setenv("TZ" = "Asia/Tokyo")
 parent_path <- "/Users/admin/Desktop/NHOH-R-miniCHP"
@@ -69,4 +71,6 @@ ptdata <- subset(ptdata, SUBJID != 6)
 all_qualification <- as.numeric(nrow(ptdata))
 # 中央病理診断適格例
 # 全治療例
-
+all_treatment <- all_qualification
+# option.csv$治療コース
+treatment_course <- subset(option_csv, Option.name == "治療コース")

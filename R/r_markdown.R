@@ -17,3 +17,4 @@ if (this_program_path != "") {
 source(paste0(source_path, "/common.R"))
 render("demog.R", output_dir=output_path )
 render("treatment.R", output_dir=output_path )
+render("ae.R", output_dir=output_path )
