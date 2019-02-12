@@ -31,6 +31,7 @@ kOption_csv_fileEncoding <- "cp932"
 kNA_lb <- -1
 kMaxcourse <- 6
 kCourse_count <- c(1:6)
+kCTCAEGrade <- c(1:5)
 # ------
 Sys.setenv("TZ" = "Asia/Tokyo")
 parent_path <- "/Users/admin/Desktop/NHOH-R-miniCHP"
