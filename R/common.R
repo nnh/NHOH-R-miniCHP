@@ -8,7 +8,7 @@ library("readxl")
 AggregateLength <- function(target_column, column_name){
   df <- aggregate(target_column, by=list(target_column), length)
   colnames(df) <- c(column_name, "count")
-  df$per <- prop.table(df$count) * 100
+  df$per <- round(prop.table(df$count) * 100, digits=1)
   return(df)
 }
 SummaryValue <- function(target_column){

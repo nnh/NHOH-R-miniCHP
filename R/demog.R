@@ -62,13 +62,15 @@ for (i in 1:nrow(df_ipi)) {
     df_ipi[i, "score"] <- 2
   } else if (df_ipi[i,"ipi"] == 3) {
     df_ipi[i, "score"] <- 3
-  } else if (df_ipi[i,"ipi"] >= 4) {
+  } else if (df_ipi[i,"ipi"] == 4) {
     df_ipi[i, "score"] <- 4
+  } else if (df_ipi[i,"ipi"] == 5) {
+    df_ipi[i, "score"] <- 5
   } else {
     df_ipi[i, "score"] <- NA
   }
 }
-df_ipi$score <- factor(df_ipi$score, levels=c(1, 2, 3, 4), labels=kIpi_scores)
+#df_ipi$score <- factor(df_ipi$score, levels=c(1, 2, 3, 4), labels=kIpi_scores)
 IPI_scores <- AggregateLength(df_ipi$score, "ipi_scores")
 #' ## IPI scores
 kable(IPI_scores, format = "markdown")
@@ -114,6 +116,7 @@ temp_b_symptoms <- subset(ptdata, !is.na(in_b_select))
 temp_b_symptoms$in_b_select <- factor(temp_b_symptoms$in_b_select, levels = c(1,2,3),
                                       labels = c("fever", "night sweats", "weight loss"))
 B_symptoms_details <- AggregateLength(temp_b_symptoms$in_b_select, "b_symptoms")
+B_symptoms_details$per <- round(B_symptoms_details$count / all_qualification * 100, digits=1)
 kable(B_symptoms_details, format = "markdown")
 #' ## LDH IU/L
 temp_ldh <- ptdata
