@@ -30,6 +30,7 @@ ConvDate <- function(sv_date, df, idx_row, flag_col, date_col, const_T){
 kBaseDate <- "2100-01-01"
 kCensoring <- 0
 kEvent <- 1
+kYearDay <- 365
 # main section ------
 pfs_ptdata <- ptdata
 pfs_ptdata$pfs_date <- NA
@@ -75,20 +76,22 @@ for (i in 1:nrow(pfs_ptdata)) {
 }
 # The start date is the treatment start date of course 1
 pfs_ptdata <- subset(pfs_ptdata, !is.na(pfs_ptdata$pfs_date))
-pfs_ptdata$pfs_time <- difftime(as.Date(pfs_ptdata$pfs_date, origin="1970-01-01"), pfs_ptdata$fs1_ECRFTDTC,
+pfs_ptdata$pfs_time_day <- difftime(as.Date(pfs_ptdata$pfs_date, origin="1970-01-01"), pfs_ptdata$fs1_ECRFTDTC,
                                 tz="", units="days")
-pfs_ptdata$os_time <- difftime(as.Date(pfs_ptdata$os_date, origin="1970-01-01"), pfs_ptdata$fs1_ECRFTDTC,
+pfs_ptdata$pfs_time <- pfs_ptdata$pfs_time_day / kYearDay
+pfs_ptdata$os_time_day <- difftime(as.Date(pfs_ptdata$os_date, origin="1970-01-01"), pfs_ptdata$fs1_ECRFTDTC,
                                tz="", units="days")
+pfs_ptdata$os_time <- pfs_ptdata$os_time_day / kYearDay
 pfs_ptdata$treat <- factor("R-mini-CHP")
 #' # 無増悪生存率 Progression-free survival rate（PFS）
 #' ## n=`r nrow(pfs_ptdata)`
 Surv(pfs_ptdata$pfs_time, pfs_ptdata$pfs_cens)
-surdata2<-survfit(Surv(pfs_time, pfs_cens)~treat, data=pfs_ptdata, conf.int=.90)
+surdata2<-survfit(Surv(pfs_time, pfs_cens)~treat, data=pfs_ptdata, conf.int=.90, conf.type="log-log")
 summary(surdata2)
 plot(surdata2, ylim=c(0, 1.0))
 #' # 生存率 Overall survival rate（OS）
 #' ## n=`r nrow(pfs_ptdata)`
 Surv(pfs_ptdata$os_time, pfs_ptdata$os_cens)
-surdata3<-survfit(Surv(os_time, os_cens)~treat, data=pfs_ptdata, conf.int=.90)
+surdata3<-survfit(Surv(os_time, os_cens)~treat, data=pfs_ptdata, conf.int=.90, conf.type="log-log")
 summary(surdata3)
 plot(surdata3, ylim=c(0, 1.0))
