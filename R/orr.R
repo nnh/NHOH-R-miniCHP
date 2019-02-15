@@ -1,7 +1,6 @@
-#
+# orr, crr
 # Created date: 2019/2/13
 # Author: mariko ohtsuka
-# library, function section ------
 df_crr <- subset(ptdata, RSORRES_best == "CR" | RSORRES_best == "CRu")
 df_RSORRES_pr <- subset(ptdata, RSORRES_best == "PR")
 df_orr <- rbind(df_crr, df_RSORRES_pr)

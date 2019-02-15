@@ -5,34 +5,42 @@
 # install.packages('readxl')
 library("readxl")
 #' @title
+#' AggregateLength
+#' @description
+#' Returns the total and percentage of the argument's columns
+#' @param
+#' target_column : Column to be summed
+#' column_name : Name of output column
+#' @return
+#' data frame
 AggregateLength <- function(target_column, column_name){
   df <- aggregate(target_column, by=list(target_column), length)
   colnames(df) <- c(column_name, "count")
   df$per <- round(prop.table(df$count) * 100, digits=1)
   return(df)
 }
+#' @title
+#' SummaryValue
+#' @description
+#' Return summary and standard deviation of the column of arguments
+#' @param
+#' target_column : Column to be summarized
+#' @return
+#' Summary and standard deviation vector
 SummaryValue <- function(target_column){
   temp_summary <- summary(target_column)
   temp_sd <- sd(target_column)
   names(temp_sd) <- "Sd."
   return(c(temp_summary, temp_sd))
 }
-ConvNum <- function(target){
-  if (is.na(target)) {
-    temp_num <- -999
-  } else {
-    temp_num <- as.numeric(as.character(target))
-  }
-  return(temp_num)
-}
 # Constant section ------
 kOption_csv_name <- "option.csv"
 kOption_csv_fileEncoding <- "cp932"
 kNA_lb <- -1
 kMaxcourse <- 6
-kCourse_count <- c(1:6)
+kCourse_count <- c(1:kMaxcourse)
 kCTCAEGrade <- c(1:5)
-# ------
+# initialize ------
 Sys.setenv("TZ" = "Asia/Tokyo")
 parent_path <- "/Users/admin/Desktop/NHOH-R-miniCHP"
 # log output path
@@ -70,7 +78,6 @@ all_registration <- as.numeric(nrow(raw_ptdata))
 ptdata <- subset(ptdata, SUBJID != 6)
 #+ {r}
 all_qualification <- as.numeric(nrow(ptdata))
-# 中央病理診断適格例
 # 全治療例
 all_treatment <- all_qualification
 # option.csv$治療コース

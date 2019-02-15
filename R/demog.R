@@ -3,12 +3,12 @@
 # ' author: mariko ohtsuka
 # ' output:
 # '   html_document:
+# Constant section ------
 kIpi_scores <- c("low risk", "low intermediate risk", "high intermediate risk", "high risk")
-
+# Main section ------
 #' ## Number of patients (%)
-Number_of_patients <- paste0("n=", all_qualification, " (", all_qualification / all_qualification * 100, "%)")
-#' ### `r Number_of_patients`
-# kable(Number_of_patients, format = "markdown")
+number_of_patients <- paste0("n=", all_qualification, " (", all_qualification / all_qualification * 100, "%)")
+#' ### `r number_of_patients`
 #' ## Median age [IQR] (range), years *1
 df_age_sex <- merge(ptdata, birth_date_sex[ ,c("症例登録番号", "生年月日", "field4")],
                     all=F, by.x="SUBJID", by.y="症例登録番号")
@@ -18,16 +18,16 @@ for (i in 1:nrow(df_age_sex)) {
     df_age_sex[i, "age"] <- length(seq(df_age_sex[i,"生年月日"], df_age_sex[i, "reg_day"], "year")) - 1
   }
 }
-Age_smr <- SummaryValue(df_age_sex$age)
-kable(Age_smr, format = "markdown")
+age_summary <- SummaryValue(df_age_sex$age)
+kable(age_summary, format = "markdown")
 #' ## Male sex,n(%)
 df_age_sex$field4 <- factor(df_age_sex$field4, levels=c(0, 1), labels=c("male", "female"))
-Sex <- AggregateLength(df_age_sex$field4, "sex")
-kable(Sex, format = "markdown")
+sex <- AggregateLength(df_age_sex$field4, "sex")
+kable(sex, format = "markdown")
 # PS 0, 1, over 2
-PS <- AggregateLength(ptdata$in_qsorres_ps, "grade")
+ps <- AggregateLength(ptdata$in_qsorres_ps, "grade")
 #' ## PS
-kable(PS, format = "markdown")
+kable(ps, format = "markdown")
 # IPI scores
 df_ipi <- df_age_sex
 df_ipi$ipi <- NA
@@ -70,14 +70,14 @@ for (i in 1:nrow(df_ipi)) {
     df_ipi[i, "score"] <- NA
   }
 }
-#df_ipi$score <- factor(df_ipi$score, levels=c(1, 2, 3, 4), labels=kIpi_scores)
-IPI_scores <- AggregateLength(df_ipi$score, "ipi_scores")
+# df_ipi$score <- factor(df_ipi$score, levels=c(1, 2, 3, 4), labels=kIpi_scores)
+ipi_scores <- AggregateLength(df_ipi$score, "ipi_scores")
 #' ## IPI scores
-kable(IPI_scores, format = "markdown")
+kable(ipi_scores, format = "markdown")
 # Stage
-Stage <- AggregateLength(ptdata$in_patholo_ctg, "stage")
+stage <- AggregateLength(ptdata$in_patholo_ctg, "stage")
 #' ## Stage
-kable(Stage, format = "markdown")
+kable(stage, format = "markdown")
 # Marrow involvement, n(%)
 temp_marrow_involvement <- ptdata[ ,c("in_bmp_lesions", "in_bmb_lesions")]
 temp_marrow_involvement$lesions <- "なし"
@@ -93,43 +93,43 @@ for (i in 1:nrow(temp_marrow_involvement)) {
   }
 }
 #' ## Marrow involvement, n(%)
-Marrow_involvement <- AggregateLength(temp_marrow_involvement$lesions, "Marrow_involvement")
-kable(Marrow_involvement, format = "markdown")
+marrow_involvement <- AggregateLength(temp_marrow_involvement$lesions, "Marrow_involvement")
+kable(marrow_involvement, format = "markdown")
 #' ## Bulky disease,n(%)
-Bulky_disease <- AggregateLength(ptdata$in_bulky_yn, "Bulky disease")
-kable(Bulky_disease, format = "markdown")
+bulky_disease <- AggregateLength(ptdata$in_bulky_yn, "Bulky disease")
+kable(bulky_disease, format = "markdown")
 #' ## Extra nodal disease,n(%)
 #' ### liver
-Extra_nodal_disease_liver <- AggregateLength(ptdata$in_liver_yn, "liver")
-kable(Extra_nodal_disease_liver, format = "markdown")
+extra_nodal_disease_liver <- AggregateLength(ptdata$in_liver_yn, "liver")
+kable(extra_nodal_disease_liver, format = "markdown")
 #' ### spleen
-Extra_nodal_disease_spleen <- AggregateLength(ptdata$in_spleen_yn, "spleen")
-kable(Extra_nodal_disease_spleen, format = "markdown")
+extra_nodal_disease_spleen <- AggregateLength(ptdata$in_spleen_yn, "spleen")
+kable(extra_nodal_disease_spleen, format = "markdown")
 #' ### renal
-Extra_nodal_disease_renal <- AggregateLength(ptdata$in_renal_yn, "renal")
-kable(Extra_nodal_disease_renal, format = "markdown")
+extra_nodal_disease_renal <- AggregateLength(ptdata$in_renal_yn, "renal")
+kable(extra_nodal_disease_renal, format = "markdown")
 #' ## B symptoms
-B_symptoms <- AggregateLength(ptdata$in_b_yn, "B_symptoms")
-kable(B_symptoms, format = "markdown")
+b_symptoms <- AggregateLength(ptdata$in_b_yn, "B_symptoms")
+kable(b_symptoms, format = "markdown")
 #' ### 3:weight loss / 2:night sweats / 1:fever
 temp_b_symptoms <- subset(ptdata, !is.na(in_b_select))
 temp_b_symptoms$in_b_select <- factor(temp_b_symptoms$in_b_select, levels = c(1,2,3),
                                       labels = c("fever", "night sweats", "weight loss"))
-B_symptoms_details <- AggregateLength(temp_b_symptoms$in_b_select, "b_symptoms")
-B_symptoms_details$per <- round(B_symptoms_details$count / all_qualification * 100, digits=1)
-kable(B_symptoms_details, format = "markdown")
+b_symptoms_details <- AggregateLength(temp_b_symptoms$in_b_select, "b_symptoms")
+b_symptoms_details$per <- round(b_symptoms_details$count / all_qualification * 100, digits=1)
+kable(b_symptoms_details, format = "markdown")
 #' ## LDH IU/L
 temp_ldh <- ptdata
 temp_ldh$ldh_f <- ifelse(temp_ldh$in_lborres_ldh < 250, "<250", "250=<")
-LDH <- AggregateLength(temp_ldh$ldh_f, "LDH")
-kable(LDH, format = "markdown")
+ldh <- AggregateLength(temp_ldh$ldh_f, "LDH")
+kable(ldh, format = "markdown")
 # β2MG(mg/L)
 # 欠測-1を除去
 temp_in_lborres_b2mg <- subset(ptdata, in_lborres_b2mg != kNA_lb)$in_lborres_b2mg
 #' ## β2MG(mg/L)
 #' ### n=`r length(temp_in_lborres_b2mg)`
-Beta2MG <- SummaryValue(temp_in_lborres_b2mg)
-kable(Beta2MG, format = "markdown")
+beta2MG <- SummaryValue(temp_in_lborres_b2mg)
+kable(beta2MG, format = "markdown")
 # 血清sIL-2R
 # 欠測-1を除去
 temp_in_lborres_sil2r <-  subset(ptdata, in_lborres_sil2r != kNA_lb)$in_lborres_sil2r
@@ -137,4 +137,3 @@ temp_in_lborres_sil2r <-  subset(ptdata, in_lborres_sil2r != kNA_lb)$in_lborres_
 #' ### n=`r length(temp_in_lborres_sil2r)`
 sIL_2R <- SummaryValue(temp_in_lborres_sil2r)
 kable(sIL_2R, format = "markdown")
-

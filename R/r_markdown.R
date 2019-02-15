@@ -1,14 +1,19 @@
-#
+# output html files
 # Created date: 2019/2/5
 # Author: mariko ohtsuka
-# install.packages("rmarkdown")
 
+# library, function section ------
+# install.packages("rmarkdown")
 library(rmarkdown)
 library(rstudioapi)
 library(knitr)
 knitr::opts_chunk$set(echo=F, comment=NA)
 # Getting the path of this program path
-this_program_path <- rstudioapi::getActiveDocumentContext()$path
+if (Sys.getenv("R_PLATFORM") == "") {
+  this_program_path <- ""   # Windows
+} else {
+  this_program_path <- rstudioapi::getActiveDocumentContext()$path   # Mac
+}
 source_path <- getwd()
 if (this_program_path != "") {
   temp_path <- unlist(strsplit(this_program_path, "/"))
