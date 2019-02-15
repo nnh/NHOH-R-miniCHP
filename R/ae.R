@@ -35,6 +35,8 @@ SummaryAE <- function(df, num_per){
       if (temp_df[i, j] > 0) {
         temp_per <- round(as.numeric(temp_df[i, j]) / num_per * 100, digits=1)
         temp_df[i, j] <- paste0(temp_df[i, j], " (", temp_per, "%)")
+      } else {
+        temp_df[i, j] <- " "
       }
     }
   }
