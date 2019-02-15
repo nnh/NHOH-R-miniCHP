@@ -1,4 +1,4 @@
-# '
+# ' ae
 # ' Created date: 2019/2/12
 # ' author: mariko ohtsuka
 # ' output:
@@ -27,6 +27,8 @@ SummaryAE <- function(df, num_per){
       }
     }
   }
+  # Grade3以上の合計列を作成
+  temp_df$over_Grade3 <- temp_df[paste0(kAEGrade_Head, 3)] + temp_df[paste0(kAEGrade_Head, 4)] + temp_df[paste0(kAEGrade_Head, 5)]
   # %を求める
   for (i in 1:nrow(temp_df)) {
     for (j in 3:ncol(temp_df)) {
@@ -48,8 +50,17 @@ kAE_value <- 0
 kAE_trm <- "AETERM_trm"
 kAE_grd <- "AETERM_grd"
 kAE_trm_num <- paste0("num_", kAE_trm)
+# sae_reportとマージ
+sae_ae <- sae_report[ , c("SUBJID", "AETERM_trm", "AETERM_grd", "ae_epoch")]
+sae_ae$AEDUR <- NA
+sae_ae$AESTDTC <- sae_report$AESTDTC
+sae_ae$AEENDTC <- NA
+sae_ae$AEREL <- sae_report$AEREL
+sae_ae$AEOUT <- sae_report$AEOUT
+sae_ae$aeout_dtc <- sae_report$aeout_dtc
+merge_sae_ae <- rbind(ae, sae_ae)
 # 対象はGrade3以上
-ae_overG3 <- subset(ae, ae[kAE_grd] >=3)
+ae_overG3 <- subset(merge_sae_ae, merge_sae_ae[kAE_grd] >=3)
 #' # 全コース
 #' ## n=`r all_treatment`
 # 最悪のGradeを取得
