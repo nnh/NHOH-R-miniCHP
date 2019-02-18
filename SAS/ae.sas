@@ -2,7 +2,7 @@
 Program Name : ae.sas
 Study Name : NHOH-R-miniCHP
 Author : Kato Kiroku
-Date : 2019-02-15
+Date : 2019-02-18
 SAS version : 9.4
 **************************************************************************;
 
@@ -41,18 +41,33 @@ options mprint mlogic symbolgen minoperator;
 
 %macro COUNT (course, no);
 
-    data _NULL_;
-        set libads.ptdata end=last;
-        if subjid='6' then delete;
-        retain cnt 0;
-        cnt+1;
-        if last then call symputx("_TN_", cnt);
-    run;
+    %if &course.=all %then %do;
+      data _NULL_;
+          set libads.ptdata end=last;
+          if subjid='6' then delete;
+          retain cnt 0;
+          cnt+1;
+          if last then call symputx("_TN_", cnt);
+      run;
+    %end;
 
-    %put &_TN_;
+    %if &course. NE all %then %do;
+      data ptdata_&no.;
+          set libads.ptdata;
+          if subjid='6' then delete;
+          if ds_epoch<&no and ds_epoch NE . then delete;
+      run;
+
+      data _NULL_;
+          set ptdata_&no. end=last;
+          retain cnt 0;
+          cnt+1;
+          if last then call symputx("_TN_", cnt);
+      run;
+    %end;
 
     data ae;
-        set libads.ae;
+        set libads.ae libads.sae_report;
         if subjid='6' then delete;
         where ae_epoch in (&no);
     run;
@@ -86,31 +101,36 @@ options mprint mlogic symbolgen minoperator;
 
     data ae_g3_1;
         set ae_g3;
-        percent=round(percent, 0.01);
+        percent=round((count/&_TN_.)*100, 0.01);
         keep AETERM_trm count percent;
         rename count=g3_count percent=g3_percent;
     run;
 
     data ae_g4_1;
         set ae_g4;
-        percent=round(percent, 0.01);
+        percent=round((count/&_TN_.)*100, 0.01);
         keep AETERM_trm count percent;
         rename count=g4_count percent=g4_percent;
     run;
 
     data ae_g5_1;
         set ae_g5;
-        percent=round(percent, 0.01);
+        percent=round((count/&_TN_.)*100, 0.01);
         keep AETERM_trm count percent;
         rename count=g5_count percent=g5_percent;
     run;
 
     data ae_g345_1;
         set ae_g345;
-        percent=round(percent, 0.01);
+        percent=round((count/&_TN_.)*100, 0.01);
         keep AETERM_trm count percent;
         rename count=g345_count percent=g345_percent;
     run;
+
+    proc sort data=ae_g3_1; by AETERM_trm; run;
+    proc sort data=ae_g4_1; by AETERM_trm; run;
+    proc sort data=ae_g5_1; by AETERM_trm; run;
+    proc sort data=ae_g345_1; by AETERM_trm; run;
 
     data ae_&course;
         format number $30.;
