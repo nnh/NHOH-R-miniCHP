@@ -64,11 +64,20 @@ for (i in 1:nrow(pfs_ptdata)) {
   temp_os_date <- ConvDate(temp_os_date, pfs_ptdata, i, "dd_flg", "DDDTC", 1)
   # pfs,os:If not applicable, the date of final survival confirmation
   if (temp_pfs_date == kBaseDate) {
-    temp_pfs_date <- pfs_ptdata[i, "surv_dy"]
+    if (pfs_ptdata[i, "SUBJID"] == "34") {
+      temp_pfs_date <- pfs_ptdata[i, "DSDTC"]
+    } else {
+      temp_pfs_date <- pfs_ptdata[i, "surv_dy"]
+    }
     pfs_ptdata[i, "pfs_cens"] <- kCensoring
   }
   if (temp_os_date == kBaseDate) {
-    temp_os_date <- pfs_ptdata[i, "surv_dy"]
+#    temp_os_date <- pfs_ptdata[i, "surv_dy"]
+    if (pfs_ptdata[i, "SUBJID"] == "34") {
+      temp_os_date <- pfs_ptdata[i, "DSDTC"]
+    } else {
+      temp_os_date <- pfs_ptdata[i, "surv_dy"]
+    }
     pfs_ptdata[i, "os_cens"] <- kCensoring
   }
   pfs_ptdata[i, "pfs_date"] <- temp_pfs_date
@@ -89,9 +98,15 @@ Surv(pfs_ptdata$pfs_time, pfs_ptdata$pfs_cens)
 surdata2<-survfit(Surv(pfs_time, pfs_cens)~treat, data=pfs_ptdata, conf.int=.90, conf.type="log-log")
 summary(surdata2)
 plot(surdata2, ylim=c(0, 1.0))
+#' ## 追跡調査期間
+pfs_summary <- SummaryValue(as.numeric(pfs_ptdata$pfs_time))
+kable(pfs_summary, format = "markdown")
 #' # 生存率 Overall survival rate（OS）
 #' ## n=`r nrow(pfs_ptdata)`
 Surv(pfs_ptdata$os_time, pfs_ptdata$os_cens)
 surdata3<-survfit(Surv(os_time, os_cens)~treat, data=pfs_ptdata, conf.int=.90, conf.type="log-log")
 summary(surdata3)
 plot(surdata3, ylim=c(0, 1.0))
+#' ## 追跡調査期間
+os_summary <- SummaryValue(as.numeric(pfs_ptdata$os_time))
+kable(os_summary, format = "markdown")
