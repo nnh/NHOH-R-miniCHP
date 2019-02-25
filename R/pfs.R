@@ -92,6 +92,15 @@ pfs_ptdata$os_time_day <- difftime(as.Date(pfs_ptdata$os_date, origin="1970-01-0
                                tz="", units="days")
 pfs_ptdata$os_time <- pfs_ptdata$os_time_day / kYearDay
 pfs_ptdata$treat <- factor("R-mini-CHP")
+# dfs
+dfs_ptdata <-pfs_ptdata
+dfs_ptdata$dfs_time <- dfs_ptdata$pfs_time
+dfs_ptdata$dfs_cens <- dfs_ptdata$pfs_cens
+for (i in 1:nrow(dfs_ptdata)) {
+  if (!is.na(dfs_ptdata[i, "DDORRES"]) && dfs_ptdata[i, "DDORRES"] == "3.他疾患") {
+    dfs_ptdata[i, "dfs_cens"] <- kCensoring
+  }
+}
 #' # 無増悪生存率 Progression-free survival rate（PFS）
 #' ## n=`r nrow(pfs_ptdata)`
 Surv(pfs_ptdata$pfs_time, pfs_ptdata$pfs_cens)
@@ -110,3 +119,12 @@ plot(surdata3, ylim=c(0, 1.0))
 #' ## 追跡調査期間
 os_summary <- SummaryValue(as.numeric(pfs_ptdata$os_time))
 kable(os_summary, format = "markdown")
+#' # DFS
+#' ## n=`r nrow(dfs_ptdata)`
+Surv(dfs_ptdata$dfs_time, dfs_ptdata$dfs_cens)
+surdata4<-survfit(Surv(dfs_time, dfs_cens)~treat, data=dfs_ptdata, conf.int=.90, conf.type="log-log")
+summary(surdata4)
+plot(surdata4, ylim=c(0, 1.0))
+#' ## 追跡調査期間
+dfs_summary <- SummaryValue(as.numeric(dfs_ptdata$dfs_time))
+kable(dfs_summary, format = "markdown")
