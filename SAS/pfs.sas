@@ -2,7 +2,7 @@
 Program Name : pfs.sas
 Study Name : NHOH-R-miniCHP
 Author : Kato Kiroku
-Date : 2019-02-15
+Date : 2019-02-25
 SAS version : 9.4
 **************************************************************************;
 
@@ -54,7 +54,7 @@ options mprint mlogic symbolgen minoperator;
     data ptdata;
         set libads.ptdata;
         if subjid='6' then delete;
-        if subjid='34' then delete;
+        if subjid='34' then surv_dy=DSDTC;
         keep SUBJID ds_epoch fs1_ECRFTDTC rec1_yn rec1_dy prog_yn rprog_dy dd_flg DDDTC surv_flg surv_dy DSTERM fs1_ECENDTC fs4_ECENDTC;
     run;
 
