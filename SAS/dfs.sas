@@ -1,5 +1,5 @@
 **************************************************************************
-Program Name : os.sas
+Program Name : dfs.sas
 Study Name : NHOH-R-miniCHP
 Author : Kato Kiroku
 Date : 2019-02-25
@@ -55,64 +55,73 @@ options mprint mlogic symbolgen minoperator;
         set libads.ptdata;
         if subjid='6' then delete;
         if subjid='34' then surv_dy=DSDTC;
-        keep SUBJID fs1_ECRFTDTC dd_flg DDDTC surv_dy;
+        keep SUBJID ds_epoch fs1_ECRFTDTC rec1_yn rec1_dy prog_yn rprog_dy dd_flg DDDTC surv_flg surv_dy DSTERM fs1_ECENDTC fs4_ECENDTC DDORRES;
     run;
 
     data ptdata_2;
         set ptdata;
-        if dd_flg=1 then do;
-          day=DDDTC-fs1_ECRFTDTC;
+        if rec1_yn=1 and prog_yn=1 then do;
+          if rec1_dy<=rprog_dy then earliest=rec1_dy;
+          if rprog_dy<=rec1_dy then earliest=rprog_dy;
           censor=0;
         end;
-        if dd_flg NE 1 then do;
-          day=surv_dy-fs1_ECRFTDTC;
+        if rec1_yn=1 and prog_yn=2 then do;
+          earliest=rec1_dy;
+          censor=0;
+        end;
+        if rec1_yn=2 and prog_yn=1 then do;
+          earliest=rprog_dy;
+          censor=0;
+        end;
+        if rec1_yn=2 and prog_yn=2 and dd_flg='1' then do;
+          if DDORRES=3 then do;
+            earliest=DDDTC;
+            censor=1;
+          end;
+          else do;
+            earliest=DDDTC;
+            censor=0;
+          end;
+        end;
+        if rec1_yn=2 and prog_yn=2 and dd_flg=' ' and surv_dy NE . then do;
+          earliest=surv_dy;
           censor=1;
         end;
+        if DSTERM=16 and ds_epoch=1 then do;
+          if earliest<=fs1_ECENDTC then earliest=earliest;
+          else if fs1_ECENDTC<=earliest then earliest=fs1_ECENDTC;
+        end;
+        if DSTERM=16 and ds_epoch=4 then do;
+          if earliest<=fs4_ECENDTC then earliest=earliest;
+          else if fs4_ECENDTC<=earliest then earliest=fs4_ECENDTC;
+        end;
+        keep fs1_ECRFTDTC earliest censor;
+    run;
+
+    data ptdata_3;
+        set ptdata_2;
+        day=earliest-fs1_ECRFTDTC;
         years=round((day/365), 0.001);
         keep censor years;
     run;
 
     ods graphics on;
-    ods rtf file="&out.\SAS\os.rtf";
+    ods rtf file="&out.\SAS\dfs.rtf";
     ods noptitle;
     ods select survivalplot;
-      proc lifetest data=ptdata_2 stderr outsurv=os alpha=0.1 plot=survival;
+      proc lifetest data=ptdata_3 stderr outsurv=dfs alpha=0.1 plot=survival;
           time years*censor(1);
       run;
     ods rtf close;
     ods graphics off;
 
-    proc export data=os
-        outfile="&out.\SAS\os.csv"
-        dbms=csv replace;
-    run;
 
-    data os_2;
-        set os;
-        if _N_=1 then delete;
-    run;
-
-    proc means data=os_2;
-        var years;
-        output out=years n=n mean=mean std=std median=median q1=q1 q3=q3 min=min max=max;
-    run;
-
-    data years_2;
-        set years;
-        mean=round(mean, 0.01);
-        std=round(std, 0.01);
-        median=round(median, 0.01);
-        q1=round(q1, 0.01);
-        q3=round(q3, 0.01);
-        keep n mean std median q1 q3 min max;
-    run;
-
-    proc export data=years_2
-        outfile="&out.\SAS\os_followup.csv"
+    proc export data=dfs
+        outfile="&out.\SAS\dfs.csv"
         dbms=csv replace;
     run;
 
 %mend COUNT;
 
-
 %COUNT;
+
