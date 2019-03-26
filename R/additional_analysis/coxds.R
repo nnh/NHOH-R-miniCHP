@@ -14,9 +14,9 @@ coxdspfs <- data.frame(matrix(rep(NA, 1), nrow=nrow(ptdata)))
 coxdspfs$SUBJID <- ptdata$SUBJID
 coxdspfs <- coxdspfs[-1]
 # PFS時間変数
-coxdspfs$years <- pfs[["time"]]
+coxdspfs$years <- pfs_ptdata$pfs_time
 # PFS打ち切り変数
-coxdspfs$censor <- pfs[["n.censor"]]
+coxdspfs$censor <- pfs_ptdata$pfs_cens
 # 年齢
 coxdspfs$age <- df_age_sex$age
 # 性別
