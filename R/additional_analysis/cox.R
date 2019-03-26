@@ -1,3 +1,7 @@
+# cox.R
+# Created date: 2019/3/26
+# Author: mariko ohtsuka
+# library, function section ------
 #' @title
 #' ConvertFactor
 #' @description
