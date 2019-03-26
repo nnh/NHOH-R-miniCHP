@@ -1,29 +1,6 @@
 # cox.R
 # Created date: 2019/3/26
 # Author: mariko ohtsuka
-# library, function section ------
-#' @title
-#' ConvertFactor
-#' @description
-#' Convert factor to numeric or string
-#' @param
-#' df : data frame
-#' @return
-#' converted data frame
-ConvertFactor <- function(df){
-  for (i in 1:ncol(df)) {
-    if (class(df[ , i]) == "factor") {
-      if (is.numeric(df[ , i])) {
-        df[ , i] <- as.numeric(df[ , i])
-      } else {
-        df[ , i] <- as.character(df[ , i])
-      }
-    }
-  }
-  return(df)
-}
-#coxds <- ConvertFactor(coxdspfs)
-coxds <-coxdspfs
 #' ## 年齢
 summary(coxph(Surv(years, censor) ~ age, data=coxds))
 #' ## 性別
@@ -34,6 +11,19 @@ summary(coxph(Surv(years, censor) ~ cox_sex, data=coxds))
 #' ### 0,1,2
 summary(coxph(Surv(years, censor) ~ ps, data=coxds))
 #' ## stage
+#' ### 1:I E、2:II、3:II E、4:III、5:IV
+for (i in 1:nrow(coxds)) {
+  coxds[i, "cox_stage"] <- switch(as.character(coxds[i, "stage"]),
+                                  "I E" = "1",
+                                  "II" = "2",
+                                  "II E" = "3",
+                                  "III" = "4",
+                                  "IV" = "5")
+}
+summary(coxph(Surv(years, censor) ~ cox_stage, data=coxds))
+#' ## ipi
+#' ### 1,2,3,4,5
+coxds$ipi <- as.factor(coxds$ipi)
 summary(coxph(Surv(years, censor) ~ ipi, data=coxds))
 #' ## Marrow involvement
 #' ### 0:陽性、1:陰性
