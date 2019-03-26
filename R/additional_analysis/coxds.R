@@ -26,7 +26,7 @@ coxdspfs$ps <- ptdata$in_qsorres_ps
 # stage
 coxdspfs$ipi <- df_ipi$score
 # Marrow involvement
-coxdspfs$marrow <- temp_marrow_involvement$lesions
+coxdspfs$marrow <- ifelse(temp_marrow_involvement$lesions == "あり", "陽性", "陰性")
 # Bulky disease
 coxdspfs$bulky <- ptdata$in_bulky_yn
 # 肝_病変の有無
