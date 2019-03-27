@@ -28,7 +28,7 @@ coxds$agec <- ifelse(df_age_sex$age <= 84, "=<84", "84<")
 # sex
 coxds$sex <- ifelse(df_age_sex$field4 == "male", "男性", "女性")
 # PS
-coxds$ps <- ptdata$in_qsorres_ps
+coxds$ps <- ifelse(as.numeric(as.character(ptdata$in_qsorres_ps)) <= 1, "=<1", "=>2")
 # stage
 coxds$stage <- ptdata$in_patholo_ctg
 coxds$stagec <- ifelse(as.numeric(ptdata$in_patholo_ctg) >= 5, "=>III", "=<II")
