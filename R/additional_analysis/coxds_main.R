@@ -10,7 +10,12 @@ save_wd <- thisfile()
 save_wd <- find_root(is_rstudio_project, save_wd)
 source_path <- str_c(save_wd, "/R")
 source(str_c(source_path, "/additional_analysis/coxds.R"))
+save_coxds <- coxds
 coxds$years <- coxds$years_pfs
-coxds$censor <- coxds$censor_pfs
+coxds$censor <- ifelse(coxds$censor_pfs == 1, 0, 1)
 render(str_c(source_path, "/additional_analysis/cox.R"), output_dir=output_path, output_file="cox_pfs.html")
-
+rm(coxds)
+coxds <- save_coxds
+coxds$years <- coxds$years_os
+coxds$censor <- ifelse(coxds$censor_os == 1, 0, 1)
+render(str_c(source_path, "/additional_analysis/cox.R"), output_dir=output_path, output_file="cox_os.html")

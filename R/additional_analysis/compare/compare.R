@@ -2,33 +2,24 @@
 # Created date: 2019/3/26
 # Author: mariko ohtsuka
 #install.packages("sas7bdat")
-library(sas7bdat)
-sas_dat <- read.sas7bdat("/Users/admin/Desktop/NHOH-R-miniCHP/compare/coxds.sas7bdat", debug=T)
-sas_dat$sex <- ifelse(sas_dat$sex == "\U3e32393cj\U3e30393c\U3e62613c", "男性", "女性")
-r_dat <- read.csv("/Users/admin/Desktop/NHOH-R-miniCHP/compare/coxds.csv", as.is=T, fileEncoding="cp932",
-                                stringsAsFactors=F)
+#library(sas7bdat)
+#sas_dat <- read.sas7bdat("/Users/admin/Desktop/NHOH-R-miniCHP/compare/coxds.sas7bdat", debug=T)
+#sas_dat$sex <- ifelse(sas_dat$sex == "\U3e32393cj\U3e30393c\U3e62613c", "男性", "女性")
+#load("/Users/admin/Desktop/NHOH-R-miniCHP/output/coxds.Rda")
+#r_dat <- coxds
+raw_sas_dat <- read.csv("/Users/admin/Desktop/NHOH-R-miniCHP/compare/sas_coxds.csv", fileEncoding="cp932" )
+sortlist <- order(raw_sas_dat$subjid)
+sas_dat <- raw_sas_dat[sortlist, ]
+#sas_dat <- sort_sas_dat[,c(1:12)]
+#sas_dat <- cbind(sas_dat, sort_sas_dat[26])
+#sas_dat <- cbind(sas_dat, sort_sas_dat[c(13:25)])
+r_dat <- read.csv("/Users/admin/Desktop/NHOH-R-miniCHP/compare/r_coxds.csv", fileEncoding="cp932" )
 col_sas <- colnames(sas_dat)
 col_r <- colnames(r_dat)
 col_r[1] <- "subjid"
-r_dat$years_pfs <- round(r_dat$years_pfs, digits=3)
-r_dat$censor_pfs <- ifelse(r_dat$censor_pfs == 0, 1, 0)
-r_dat$years_os <- round(r_dat$years_os, digits=3)
-r_dat$censor_os <- ifelse(r_dat$censor_os == 0, 1, 0)
-r_dat$years_dfs <- round(r_dat$years_dfs, digits=3)
-r_dat$censor_dfs <- ifelse(r_dat$censor_dfs == 0, 1, 0)
-r_dat$ps <- ifelse(r_dat$ps == 0, 5, r_dat$ps)
-r_dat$stage <- ifelse(r_dat$stage == "I E", 5 ,r_dat$stage)
-r_dat$stage <- ifelse(r_dat$stage == "II", 2 ,r_dat$stage)
-r_dat$stage <- ifelse(r_dat$stage == "II E", 6 ,r_dat$stage)
-r_dat$stage <- ifelse(r_dat$stage == "III", 3 ,r_dat$stage)
-r_dat$stage <- ifelse(r_dat$stage == "III E", 7 ,r_dat$stage)
-r_dat$stage <- ifelse(r_dat$stage == "IV", 4 ,r_dat$stage)
-for (i in 1:ncol(r_dat)) {
-  r_dat[ ,i] <- ifelse(r_dat[ ,i] == "陰性", 1, r_dat[ ,i])
-  r_dat[ ,i] <- ifelse(r_dat[ ,i] == "陽性", 2, r_dat[ ,i])
-  r_dat[ ,i] <- ifelse(r_dat[ ,i] == "あり", 1, r_dat[ ,i])
-  r_dat[ ,i] <- ifelse(r_dat[ ,i] == "なし", 2, r_dat[ ,i])
-}
+r_dat$years_pfs <- round(r_dat$years_pfs, digits=10)
+r_dat$years_os <- round(r_dat$years_os, digits=10)
+r_dat$years_dfs <- round(r_dat$years_dfs, digits=10)
 if (nrow(sas_dat) == nrow(r_dat)) {
   print("row_count_ok")
 } else {
@@ -50,5 +41,7 @@ if (length(col_sas) == length(col_r)) {
       }
     }
   } else {
-  print("col_count_ng")
+  print("!!! col_count_ng")
+  print(col_sas)
+  print(col_r)
 }

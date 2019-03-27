@@ -2,32 +2,25 @@
 # Created date: 2019/3/26
 # Author: mariko ohtsuka
 #' ## 年齢
-summary(coxph(Surv(years, censor) ~ age, data=coxds))
+#' ### 0:84歳以上、1:84歳より下
+coxds$cox_age <- ifelse(coxds$agec == "84<", 0, 1)
+summary(coxph(Surv(years, censor) ~ cox_age, data=coxds))
 #' ## 性別
 #' ### 0:男性, 1:女性
 coxds$cox_sex <- ifelse(coxds$sex == "男性", 0, 1)
 summary(coxph(Surv(years, censor) ~ cox_sex, data=coxds))
 #' ## PS
-#' ### 0,1,2
-summary(coxph(Surv(years, censor) ~ ps, data=coxds))
+coxds$cox_ps <- ifelse(as.numeric(as.character(coxds$ps)) <= 1, 0, 1)
+summary(coxph(Surv(years, censor) ~ cox_ps, data=coxds))
 #' ## stage
-#' ### 1:I E、2:II、3:II E、4:III、5:IV
-for (i in 1:nrow(coxds)) {
-  coxds[i, "cox_stage"] <- switch(as.character(coxds[i, "stage"]),
-                                  "I E" = "1",
-                                  "II" = "2",
-                                  "II E" = "3",
-                                  "III" = "4",
-                                  "IV" = "5")
-}
+#' ### 0:=<II、1:=>III
+coxds$cox_stage <- ifelse(coxds$stagec == "=<II", 0, 1)
 summary(coxph(Surv(years, censor) ~ cox_stage, data=coxds))
 #' ## ipi
-#' ### 1,2,3,4,5
-coxds$ipi <- as.factor(coxds$ipi)
 summary(coxph(Surv(years, censor) ~ ipi, data=coxds))
 #' ## Marrow involvement
 #' ### 0:陽性、1:陰性
-coxds$cox_marrow <- ifelse(coxds$marrow == "陽性", 0, 1)
+coxds$cox_marrow <- ifelse(coxds$marrow == "陰性", 0, 1)
 summary(coxph(Surv(years, censor) ~ cox_marrow, data=coxds))
 #' ## Bulky disease
 #' ### 0:なし、1:あり
@@ -62,7 +55,9 @@ summary(coxph(Surv(years, censor) ~ cox_nsweats, data=coxds))
 coxds$cox_fever <- ifelse(coxds$fever == T, 0, 1)
 summary(coxph(Surv(years, censor) ~ cox_fever, data=coxds))
 #' ## LDH IU/L
-summary(coxph(Surv(years, censor) ~ ldh, data=coxds))
+#' ### 0:<250、1:250=<
+coxds$cox_ldh <- ifelse(coxds$ldh == "<250", 0, 1)
+summary(coxph(Surv(years, censor) ~ cox_ldh, data=coxds))
 #' ## β2MG(mg/L)
 summary(coxph(Surv(years, censor) ~ b2mg, data=coxds))
 #' ## 血清sIL-2R
