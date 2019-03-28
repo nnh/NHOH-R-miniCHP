@@ -90,6 +90,15 @@ z <- c("bulky", round2(x$coefficients[2], digits=3),
        paste(round2(x$conf.int[3], digits=3), round2(x$conf.int[4], digits=3), sep=" - "),
        round2(x$coefficients[5], digits=4))
 compare_df <- rbind(compare_df, z)
+#' ## Bulky mass
+coxds$cox_bulkymass <- ifelse(coxds$bulkymass == "なし", 0, 1)
+x <- summary(coxph(Surv(years, censor) ~ cox_bulkymass, data=coxds), conf.int=0.95)
+x
+z <- c("bulkymass", round2(x$coefficients[2], digits=3),
+       paste(round2(x$conf.int[3], digits=3), round2(x$conf.int[4], digits=3), sep=" - "),
+       round2(x$coefficients[5], digits=4))
+compare_df <- rbind(compare_df, z)
+#' ### 0:なし、1:あり
 #' ## 肝_病変の有無
 #' ### 0:なし、1:あり
 coxds$cox_liver <- ifelse(coxds$liver == "なし", 0, 1)

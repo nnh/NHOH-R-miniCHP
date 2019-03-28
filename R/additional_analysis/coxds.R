@@ -38,6 +38,10 @@ coxds$ipi <- df_ipi$score
 coxds$marrow <- ifelse(temp_marrow_involvement$lesions == "あり", "陽性", "陰性")
 # Bulky disease
 coxds$bulky <- ptdata$in_bulky_yn
+# Bulky mass
+coxds$bulkymass <- ifelse(ptdata$in_liver_yn == "あり" |
+                          ptdata$in_spleen_yn == "あり" |
+                          ptdata$in_renal_yn == "あり", "あり", "なし")
 # liver
 coxds$liver <- ptdata$in_liver_yn
 # spleen
