@@ -2,7 +2,7 @@
 Program Name : demog.sas
 Study Name : NHOH-R-miniCHP
 Author : Kato Kiroku
-Date : 2019-02-13
+Date : 2019-03-26
 SAS version : 9.4
 **************************************************************************;
 
@@ -76,15 +76,20 @@ run;
 
     proc means data=&rdata noprint;
         var &var;
-        output out=&name n=n mean=mean std=std median=median q1=q1 q3=q3 min=min max=max;
+        output out=&name n=n mean=m std=s median=median q1=q1 q3=q3 min=min max=max;
+    run;
+    data &name;
+        set &name;
+        mean=strip(put(round(m, 0.1), 8.1));
+        std=strip(put(round(s, 0.1), 8.1));
     run;
 
     data &name._frame;
-        format title grade $24. count percent best12.;
-        title=' ';
+        format characteristics grade $24. count percent $12.;
+        characteristics=' ';
         grade=' ';
-        count=0;
-        percent=0;
+        count=' ';
+        percent=' ';
         output;
     run;
 
@@ -94,11 +99,10 @@ run;
 
     data &name._3;
         merge &name._frame &name._2;
-        if _N_=1 then title="&title.";
+        if _N_=1 then characteristics="&title.";
         grade=upcase(_NAME_);
-        count=round(col1, 0.1);
-        call missing(percent);
-        keep title grade count percent;
+        count=col1;
+        keep characteristics grade count percent;
     run;
 
 %mend IQR;
@@ -130,14 +134,21 @@ run;
       run;
     %end;
 
+    data &name;
+        set &name;
+        c=strip(input(count, $12.));
+        p=strip(put(round(percent, 0.1), 8.1));
+        drop count percent;
+        rename c=count p=percent;
+    run;
+
     data &name._frame;
-        format title grade $24. &var &form count per percent best12.;
+        format characteristics grade $24. &var &form count percent $12.;
         do &var=&a2z;
-          title=' ';
+          characteristics=' ';
           grade=' ';
-          count=0;
-          per=0;
-          percent=0;
+          count=' ';
+          percent=' ';
           output;
         end;
     run;
@@ -154,9 +165,7 @@ run;
         %if not(&name in (in_b_select_3 in_b_select_2 in_b_select_1 ipi_scores)) %then %do;
           grade=put(&var, %FMTNUM2CHAR(&var));
         %end;
-        per=round(percent, 0.1);
-        drop &var percent;
-        rename per=percent;
+        drop &var;
     run;
 
     %if "&name" NE "Marrow_involvement" %then %do;
@@ -165,7 +174,9 @@ run;
 
     data &name._2;
         set &name._2;
-        if _N_=1 then title="&title.";
+        if _N_=1 then characteristics="&title.";
+        if count=' ' then count='0';
+        if percent=' ' then percent='0';
     run;
 
 %mend COUNT;
@@ -173,14 +184,16 @@ run;
 
 *Number of patients;
 data nop;
-    format title grade $24. count percent best12.;
+    format characteristics grade $24. count percent $12.;
     set dm end=last;
-    title='Number of patients';
-    retain count 0;
-    count+1;
+    characteristics='Number of patients';
+    retain c 0;
+    c+1;
     if last;
-    call missing(grade, percent);
-    keep title grade count percent;
+    grade=' ';
+    count=strip(put(c, best12.));
+    percent=' ';
+    keep characteristics grade count percent;
 run;
 
 *Age;
@@ -271,19 +284,26 @@ run;
 proc freq data=ldh noprint;
     table grade / out=ldh_2;
 run;
+data ldh_2;
+    set ldh_2;
+    c=strip(input(count, $12.));
+    p=strip(put(round(percent, 0.1), 8.1));
+    drop count percent;
+    rename c=count p=percent;
+run;
 data ldh_frame;
-    format title grade $24. count percent best12.;
-    title=' ';
+    format characteristics grade $24. count percent $12.;
+    characteristics=' ';
     grade=' ';
-    count=0;
-    percent=0;
+    count=' ';
+    percent=' ';
     output;
 run;
 data ldh_3;
     merge ldh_frame ldh_2;
-    if _N_=1 then title='LDH IU/L';
+    if _N_=1 then characteristics='LDH IU/L';
     percent=round(percent, 0.1);
-    keep title grade count percent;
+    keep characteristics grade count percent;
 run;
 
 *É¿2MG(mg/L);

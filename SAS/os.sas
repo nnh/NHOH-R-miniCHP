@@ -2,7 +2,7 @@
 Program Name : os.sas
 Study Name : NHOH-R-miniCHP
 Author : Kato Kiroku
-Date : 2019-02-25
+Date : 2019-03-11
 SAS version : 9.4
 **************************************************************************;
 
@@ -111,6 +111,25 @@ options mprint mlogic symbolgen minoperator;
         outfile="&out.\SAS\os_followup.csv"
         dbms=csv replace;
     run;
+
+
+
+    ods graphics on;
+    ods rtf file="&out.\SAS\os_95cl.rtf";
+    ods noptitle;
+    ods select survivalplot;
+      proc lifetest data=ptdata_2 stderr outsurv=os_95cl plot=survival;
+          time years*censor(1);
+      run;
+    ods rtf close;
+    ods graphics off;
+
+    proc export data=os_95cl
+        outfile="&out.\SAS\os_95cl.csv"
+        dbms=csv replace;
+    run;
+
+
 
 %mend COUNT;
 

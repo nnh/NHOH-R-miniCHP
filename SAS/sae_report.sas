@@ -79,3 +79,31 @@ options mprint mlogic symbolgen minoperator;
 %mend COUNT;
 
 %COUNT;
+
+
+
+data sae_sterben;
+    set libads.ptdata;
+    if subjid='6' then delete;
+    if dd_flg='1';
+    keep subjid dd_flg DDDTC DDORRES;
+run;
+
+proc freq data=sae_sterben noprint;
+    tables dd_flg*DDORRES / out=sae_sterben_2;
+run;
+
+    proc summary data=sae_sterben_2;
+        var count percent;
+        output out=sae_sterben_2_total sum=;
+    run;
+
+    data sae_sterben_2_total;
+        set sae_sterben_2_total;
+        category='çáåv';
+        keep Item Category Count Percent;
+    run;
+
+    data sae_sterben_3;
+        set sae_sterben_2 sae_sterben_2_total;
+    run;
