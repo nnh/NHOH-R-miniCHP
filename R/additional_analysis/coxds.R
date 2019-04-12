@@ -24,14 +24,14 @@ coxds$years_dfs <- dfs_ptdata$dfs_time
 coxds$censor_dfs <- ifelse(dfs_ptdata$dfs_cens == 0, 1, 0)
 # age
 coxds$age <- df_age_sex$age
-coxds$agec <- ifelse(df_age_sex$age <= 84, "=<84", "84<")
+coxds$agec <- ifelse(df_age_sex$age < 84, "<84", "84=<")
 # sex
 coxds$sex <- ifelse(df_age_sex$field4 == "male", "男性", "女性")
 # PS
-coxds$ps <- ifelse(as.numeric(as.character(ptdata$in_qsorres_ps)) <= 1, "=<1", "=>2")
+coxds$ps <- ifelse(as.numeric(as.character(ptdata$in_qsorres_ps)) <= 1, "=<1", "2=<")
 # stage
 coxds$stage <- ptdata$in_patholo_ctg
-coxds$stagec <- ifelse(as.numeric(ptdata$in_patholo_ctg) >= 5, "=>III", "=<II")
+coxds$stagec <- ifelse(as.numeric(ptdata$in_patholo_ctg) >= 5, "III=>", "=<II")
 # ipi
 coxds$ipi <- df_ipi$score
 # Marrow involvement

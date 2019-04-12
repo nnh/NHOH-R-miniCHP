@@ -25,8 +25,8 @@ round2 <- function(x, digits) {
 }
 compare_df <- data.frame(matrix(rep(NA, 4), nrow=1))[numeric(0), ]
 #' ## 年齢
-#' ### 0:84歳以上、1:84歳より下
-coxds$cox_age <- ifelse(coxds$agec == "84<", 0, 1)
+#' ### 0:84歳未満、1:84歳以上
+coxds$cox_age <- ifelse(coxds$agec == "<84", 0, 1)
 x <- summary(coxph(Surv(years, censor) ~ cox_age, data=coxds), conf.int=0.95)
 x
 z <- c("age", round2(x$coefficients[2], digits=3),
@@ -48,7 +48,7 @@ z <- c("sex", round2(x$coefficients[2], digits=3),
        round2(x$coefficients[5], digits=4))
 compare_df <- rbind(compare_df, z)
 #' ## PS
-#' ### 0:=<1, 1:=>2
+#' ### 0:1以下, 1:2以上
 coxds$cox_ps <- ifelse(coxds$ps == "=<1", 0, 1)
 x <- summary(coxph(Surv(years, censor) ~ cox_ps, data=coxds), conf.int=0.95)
 x
@@ -57,7 +57,7 @@ z <- c("ps", round2(x$coefficients[2], digits=3),
        round2(x$coefficients[5], digits=4))
 compare_df <- rbind(compare_df, z)
 #' ## stage
-#' ### 0:=<II、1:=>III
+#' ### 0:II以下、1:III以上
 coxds$cox_stage <- ifelse(coxds$stagec == "=<II", 0, 1)
 x <- summary(coxph(Surv(years, censor) ~ cox_stage, data=coxds), conf.int=0.95)
 x
