@@ -2,7 +2,7 @@
 Program Name : ae.sas
 Study Name : NHOH-R-miniCHP
 Author : Kato Kiroku
-Date : 2019-02-18
+Date : 2019-03-27
 SAS version : 9.4
 **************************************************************************;
 
@@ -49,6 +49,12 @@ options mprint mlogic symbolgen minoperator;
           cnt+1;
           if last then call symputx("_TN_", cnt);
       run;
+
+/*      data aetoxgr;*/
+/*        set libads.ptdata;*/
+/*        if subjid='6' then delete;*/
+/*        keep subjid fs1_aetoxgr_fn_grd fs2_aetoxgr_fn_grd fs3_aetoxgr_fn_grd fs4_aetoxgr_fn_grd fs5_aetoxgr_fn_grd fs6_aetoxgr_fn_grd;*/
+/*      run;*/
     %end;
 
     %if &course. NE all %then %do;
@@ -64,6 +70,12 @@ options mprint mlogic symbolgen minoperator;
           cnt+1;
           if last then call symputx("_TN_", cnt);
       run;
+
+/*      data aetoxgr;*/
+/*          set libads.ptdata;*/
+/*          if subjid='6' then delete;*/
+/*          keep subjid fs&no._aetoxgr_fn_grd;*/
+/*      run;*/
     %end;
 
     data ae;

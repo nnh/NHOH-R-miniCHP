@@ -2,7 +2,7 @@
 Program Name : treatment.sas
 Study Name : NHOH-R-miniCHP
 Author : Kato Kiroku
-Date : 2019-02-13
+Date : 2019-03-26
 SAS version : 9.4
 **************************************************************************;
 
@@ -106,6 +106,13 @@ run;
 
 %macro COUNT_2;
 
+    %global _OBS_;
+    data _null_;
+        set dm nobs=obs;
+        call symput("_OBS_", obs);
+        stop;
+    run;
+
     data cancel;
         set libads.ptdata;
         if SUBJID='6' then delete;
@@ -132,7 +139,7 @@ run;
         merge cancel_frame cancel_1;
         by ds_epoch;
         grade=put(ds_epoch, %FMTNUM2CHAR(ds_epoch));
-        percent=round(percent, 0.1);
+        percent=round((count/&_obs_)*100, 0.1);
         if _N_=1 then title="R-mini CHPíÜé~ÇµÇΩÉRÅ[ÉXêî";
         keep title grade count percent;
     run;
