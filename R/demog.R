@@ -137,3 +137,6 @@ temp_in_lborres_sil2r <-  subset(ptdata, in_lborres_sil2r != kNA_lb)$in_lborres_
 #' ### n=`r length(temp_in_lborres_sil2r)`
 sIL_2R <- SummaryValue(temp_in_lborres_sil2r)
 kable(sIL_2R, format = "markdown")
+#' ## ALB  in_lborres_lab
+alb <- SummaryValue(ptdata$in_lborres_lab)
+kable(alb, format = "markdown")
