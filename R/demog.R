@@ -140,3 +140,16 @@ kable(sIL_2R, format = "markdown")
 #' ## ALB  in_lborres_lab
 alb <- SummaryValue(ptdata$in_lborres_lab)
 kable(alb, format = "markdown")
+alb_u <- nrow(subset(ptdata, in_lborres_lab >3.5))
+alb_l <- nrow(subset(ptdata, in_lborres_lab <=3.5))
+alb_u_per <- alb_u / nrow(ptdata) * 100
+alb_l_per <- alb_l / nrow(ptdata) * 100
+print(paste0(">3.5 : ", alb_u, "(", alb_u_per, "%)"))
+print(paste0("<=3.5 : ", alb_l, "(", alb_l_per, "%)"))
+
+alb_u_2 <- nrow(subset(ptdata, in_lborres_lab >=3.5))
+alb_l_2 <- nrow(subset(ptdata, in_lborres_lab <3.5))
+alb_u_per_2 <- alb_u_2 / nrow(ptdata) * 100
+alb_l_per_2 <- alb_l_2 / nrow(ptdata) * 100
+print(paste0(">=3.5 : ", alb_u_2, "(", alb_u_per_2, "%)"))
+print(paste0("<3.5 : ", alb_l_2, "(", alb_l_per_2, "%)"))
