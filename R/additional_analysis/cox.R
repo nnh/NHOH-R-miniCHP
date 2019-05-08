@@ -185,5 +185,14 @@ z <- c("sIL-2R", round2(x$coefficients[2], digits=3),
        paste(round2(x$conf.int[3], digits=3), round2(x$conf.int[4], digits=3), sep=" - "),
        round2(x$coefficients[5], digits=4))
 compare_df <- rbind(compare_df, z)
+#' ## alb
+coxds$cox_alb <- ifelse(coxds$alb == "3.5<=", 1, 0)
+x <- summary(coxph(Surv(years, censor) ~ alb, data=coxds), conf.int=0.95)
+x
+z <- c("alb", round2(x$coefficients[2], digits=3),
+       paste(round2(x$conf.int[3], digits=3), round2(x$conf.int[4], digits=3), sep=" - "),
+       round2(x$coefficients[5], digits=4))
+compare_df <- rbind(compare_df, z)
+
 # output csv
 write.csv(compare_df, paste0(output_path, "/", pfsos, "cox_compare.csv"), row.names=F, fileEncoding = "cp932", na="")

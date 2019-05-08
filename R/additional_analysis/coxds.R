@@ -62,6 +62,8 @@ coxds$ldh <- temp_ldh$ldh_f
 coxds$b2mg <- ifelse(ptdata$in_lborres_b2mg == kNA_lb, NA, ptdata$in_lborres_b2mg)
 # sIL-2R
 coxds$sil2r <- ifelse(ptdata$in_lborres_sil2r == kNA_lb, NA, ptdata$in_lborres_sil2r)
+# alb
+coxds$alb <- ifelse(ptdata$in_lborres_lab < 3.5, "<3.5", "3.5<=")
 # output csv
 write.csv(coxds, paste0(output_path, "/coxds.csv"), row.names=F, fileEncoding = "cp932", na="")
 # output dataset
