@@ -193,6 +193,16 @@ z <- c("alb", round2(x$coefficients[2], digits=3),
        paste(round2(x$conf.int[3], digits=3), round2(x$conf.int[4], digits=3), sep=" - "),
        round2(x$coefficients[5], digits=4))
 compare_df <- rbind(compare_df, z)
-
+#' ## Sex  IPI scores    B symptoms    β2MG
+#' ## 性別
+#' ### 0:男性, 1:女性
+#' ## B symptoms
+#' ### 0:なし、1:あり
+x <- summary(coxph(Surv(years, censor) ~ cox_sex + ipi + cox_bsymptom + b2mg, data=coxds), conf.int=0.95)
+x
+z <- c("Sex  IPI scores    B symptoms    β2MG", round2(x$coefficients[2], digits=3),
+       paste(round2(x$conf.int[3], digits=3), round2(x$conf.int[4], digits=3), sep=" - "),
+       round2(x$coefficients[5], digits=4))
+compare_df <- rbind(compare_df, z)
 # output csv
 write.csv(compare_df, paste0(output_path, "/", pfsos, "cox_compare.csv"), row.names=F, fileEncoding = "cp932", na="")
