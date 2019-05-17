@@ -153,3 +153,97 @@ alb_u_per_2 <- alb_u_2 / nrow(ptdata) * 100
 alb_l_per_2 <- alb_l_2 / nrow(ptdata) * 100
 print(paste0(">=3.5 : ", alb_u_2, "(", alb_u_per_2, "%)"))
 print(paste0("<3.5 : ", alb_l_2, "(", alb_l_per_2, "%)"))
+#' # 輸血の有無:あり
+#' ## 血小板
+#' ### 1コース
+fs1_cmoccur_plt <- AggregateLength(ptdata$fs1_cmoccur_plt, "fs1_cmoccur_plt")
+kable(fs1_cmoccur_plt, format = "markdown")
+#'  症例番号
+subset(ptdata, fs1_cmoccur_plt == "あり")[,"SUBJID"]
+#' ###  2コース
+fs2_cmoccur_plt <- AggregateLength(ptdata$fs2_cmoccur_plt, "fs2_cmoccur_plt")
+kable(fs2_cmoccur_plt, format = "markdown")
+#'  症例番号
+subset(ptdata, fs2_cmoccur_plt == "あり")[,"SUBJID"]
+#' ###  3コース
+fs3_cmoccur_plt <- AggregateLength(ptdata$fs3_cmoccur_plt, "fs3_cmoccur_plt")
+kable(fs3_cmoccur_plt, format = "markdown")
+#'  症例番号
+subset(ptdata, fs3_cmoccur_plt == "あり")[,"SUBJID"]
+#' ###  4コース
+fs4_cmoccur_plt <- AggregateLength(ptdata$fs4_cmoccur_plt, "fs4_cmoccur_plt")
+kable(fs4_cmoccur_plt, format = "markdown")
+#'  症例番号
+subset(ptdata, fs4_cmoccur_plt == "あり")[,"SUBJID"]
+#' ###  5コース
+fs6_cmoccur_plt <- AggregateLength(ptdata$fs6_cmoccur_plt, "fs6_cmoccur_plt")
+kable(fs6_cmoccur_plt, format = "markdown")
+#'  症例番号
+subset(ptdata, fs6_cmoccur_plt == "あり")[,"SUBJID"]
+#' ###  6コース
+fs5_cmoccur_plt <- AggregateLength(ptdata$fs5_cmoccur_plt, "fs5_cmoccur_plt")
+kable(fs5_cmoccur_plt, format = "markdown")
+#'  症例番号
+subset(ptdata, fs5_cmoccur_plt == "あり")[,"SUBJID"]
+#' ##  赤血球
+#' ###  1コース
+fs1_cmoccur_rbc <- AggregateLength(ptdata$fs1_cmoccur_rbc, "fs1_cmoccur_rbc")
+kable(fs1_cmoccur_rbc, format = "markdown")
+#'  症例番号
+subset(ptdata, fs1_cmoccur_rbc == "あり")[,"SUBJID"]
+#' ###  2コース
+fs2_cmoccur_rbc <- AggregateLength(ptdata$fs2_cmoccur_rbc, "fs2_cmoccur_rbc")
+kable(fs2_cmoccur_rbc, format = "markdown")
+#'  症例番号
+subset(ptdata, fs2_cmoccur_rbc == "あり")[,"SUBJID"]
+#' ###  3コース
+fs3_cmoccur_rbc <- AggregateLength(ptdata$fs3_cmoccur_rbc, "fs3_cmoccur_rbc")
+kable(fs3_cmoccur_rbc, format = "markdown")
+#'  症例番号
+subset(ptdata, fs3_cmoccur_rbc == "あり")[,"SUBJID"]
+#' ###  4コース
+fs4_cmoccur_rbc <- AggregateLength(ptdata$fs4_cmoccur_rbc, "fs4_cmoccur_rbc")
+kable(fs4_cmoccur_rbc, format = "markdown")
+#'  症例番号
+subset(ptdata, fs4_cmoccur_rbc == "あり")[,"SUBJID"]
+#' ###  5コース
+fs6_cmoccur_rbc <- AggregateLength(ptdata$fs6_cmoccur_rbc, "fs6_cmoccur_rbc")
+kable(fs6_cmoccur_rbc, format = "markdown")
+#'  症例番号
+subset(ptdata, fs6_cmoccur_rbc == "あり")[,"SUBJID"]
+#' ###  6コース
+fs5_cmoccur_rbc <- AggregateLength(ptdata$fs5_cmoccur_rbc, "fs5_cmoccur_rbc")
+kable(fs5_cmoccur_rbc, format = "markdown")
+#'  症例番号
+subset(ptdata, fs5_cmoccur_rbc == "あり")[,"SUBJID"]
+#' # 発熱性好中球減少症：グレード
+#' ## 1コース
+fs1_aetoxgr_fn_grd <- AggregateLength(ptdata$fs1_aetoxgr_fn_grd, "fs1_aetoxgr_fn_grd")
+kable(fs1_aetoxgr_fn_grd, format = "markdown")
+#'  症例番号
+subset(ptdata, fs1_aetoxgr_fn_grd > 0)[,"SUBJID"]
+#' ## 2コース
+fs2_aetoxgr_fn_grd <- AggregateLength(ptdata$fs2_aetoxgr_fn_grd, "fs2_aetoxgr_fn_grd")
+kable(fs2_aetoxgr_fn_grd, format = "markdown")
+#'  症例番号
+subset(ptdata, fs2_aetoxgr_fn_grd > 0)[,"SUBJID"]
+#' ## 3コース
+fs3_aetoxgr_fn_grd <- AggregateLength(ptdata$fs3_aetoxgr_fn_grd, "fs3_aetoxgr_fn_grd")
+kable(fs3_aetoxgr_fn_grd, format = "markdown")
+#'  症例番号
+subset(ptdata, fs3_aetoxgr_fn_grd > 0)[,"SUBJID"]
+#' ## 4コース
+fs4_aetoxgr_fn_grd <- AggregateLength(ptdata$fs4_aetoxgr_fn_grd, "fs4_aetoxgr_fn_grd")
+kable(fs4_aetoxgr_fn_grd, format = "markdown")
+#'  症例番号
+subset(ptdata, fs4_aetoxgr_fn_grd > 0)[,"SUBJID"]
+#' ## 5コース
+fs5_aetoxgr_fn_grd <- AggregateLength(ptdata$fs5_aetoxgr_fn_grd, "fs5_aetoxgr_fn_grd")
+kable(fs5_aetoxgr_fn_grd, format = "markdown")
+#'  症例番号
+subset(ptdata, fs5_aetoxgr_fn_grd > 0)[,"SUBJID"]
+#' ## 6コース
+fs6_aetoxgr_fn_grd <- AggregateLength(ptdata$fs6_aetoxgr_fn_grd, "fs6_aetoxgr_fn_grd")
+kable(fs6_aetoxgr_fn_grd, format = "markdown")
+#'  症例番号
+subset(ptdata, fs6_aetoxgr_fn_grd > 0)[,"SUBJID"]
